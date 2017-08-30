@@ -21,7 +21,7 @@ Theano may require that you [install libgpuarray and pygpu manually](http://deep
 ## Usage
 
 This program requires the following inputs:
-* GeoTIFF images of the same location from two different times.
+* GeoTIFF images of the same location from two different times. The projection of these images must contain only translation components, and not any rotation or skew.
 * A CSV containing bitemporal class labels for the GeoTIFF images in the following format (header row formatting is arbitrary):
 ```
 X,Y,label_t0,label_t
@@ -33,7 +33,9 @@ sample3_x, sample2_y, sample3_label_t0, sample3_label_t1
 Where x and y are given as geographic coordinates (not pixel coordinates). The CSV file can be generated with QGIS as described in the next section. There should be at least 80 labels with a class balance between change and non-change (so, a minimum of 40 change and 40 non-change samples). If ```--no-test``` is enabled, all samples will be used for training and the 80 can be reduced to 64.
 
 Provided the above inputs, the command:
+
 ```python3 run.py image0.tif image1.tif labels.csv```
+
 Will train a model from scratch and then detect changes between the images located at ```image0.tif``` and ```image1.tif```, using the CSV file located at ```labels.csv```. Output will be stored in the results directory and includes the following files:
 * ```change_vae_svm.png```: Changes detected by the VAE after thresholding with an SVM.
 * ```change_vae_svm_filtered.png```: VAE+SVM changes after filtering.
@@ -50,7 +52,6 @@ The following additional modifiers are available:
 * ```--save name, -s name```: Saves the model as ```name``` instead of the default, ```last```.
 * ```--load name, -l name```: Loads the pretrained model ```name``` instead of training from scratch. Even if ```--save``` was not provided, the most recently trained model can be loaded with ```--load last```.
 * ```--overwrite, -o```: Required if ```--save``` is used with a name (other than ```last```) that would write over a previously saved model.
-* ```
 
 ## How to generate the CSV file with QGIS
 
